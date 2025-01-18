@@ -4,12 +4,12 @@ import java.util.Scanner;
 
 public class UrnaEletronica{
     private int votosNulos;
-    private List<Candidatos> candidatos;
+    private List<Candidatos> lista;
     
 
-    public UrnaEletronica(){
-
-        List<Candidatos> lista = new ArrayList<>();
+    public void listaCandidatos(){
+ 
+        lista = new ArrayList<>();
 
         Candidatos AdaLovelace = new Candidatos("Ada Lovelace" , 01);
         Candidatos AlanTuring = new Candidatos("Alan Turing", 02);
@@ -27,7 +27,7 @@ public class UrnaEletronica{
 
     public void receberVoto(int numero){
         boolean votoValido = false;
-        for(Candidatos candidato : candidatos) {
+        for(Candidatos candidato : lista) {
             if (candidato.getNumero() == numero){
                 candidato.incrementarVotos();
                 votoValido = true;
@@ -41,12 +41,52 @@ public class UrnaEletronica{
         }
     }
     public void apurarResultados(){
-        
-    }
-    public void exibirResultados(){
-            
+        int totalVotosValidos = lista.stream().mapToInt(Candidatos::getVotos).sum();
+  
+      int maiorVotos = 0;
+      List<Candidatos> vencedores = new ArrayList<>();
+  
+      for (Candidatos candidato : lista) {
+          if (candidato.getVotos() > maiorVotos) {
+              maiorVotos = candidato.getVotos();
+              vencedores.clear(); 
+              vencedores.add(candidato);
+          } else if (candidato.getVotos() == maiorVotos) {
+              vencedores.add(candidato); 
+          }
+      }
+  
+      this.totalVotosValidos = totalVotosValidos;
+      this.maiorVotos = maiorVotos;
+      this.vencedores = vencedores;
     }
     
+    public void exibirResultados(){
+        f (totalVotosValidos == 0) {
+            System.out.println("Nenhum voto foi registrado.");
+            return;
+        }
+    
+        System.out.println("\nResultado da Votação:");
+        for (Candidatos candidato : lista) {
+            double percentual = totalVotosValidos > 0 
+                ? (candidato.getVotos() * 100.0 / totalVotosValidos) 
+                : 0.0; 
+            System.out.printf("%s: %d votos (%.2f%%)%n", 
+                candidato.getnomeCandidato(), candidato.getVotos(), percentual);
+    }
+    
+    System.out.println("Votos Nulos: " + votosNulos);
+
+    if (vencedores.size() == 1) {
+        System.out.println("Vencedor: " + vencedores.get(0).getnomeCandidato());
+    } else if (vencedores.size() > 1) {
+        System.out.print("Houve empate entre: ");
+        for (Candidatos vencedor : vencedores) {
+            System.out.print(vencedor.getnomeCandidato() + " ");
+        }
+        System.out.println();
+    }
 }
     public static void main(String [] args){
         Scanner scanner = new Scanner(System.in);
@@ -73,5 +113,8 @@ public class UrnaEletronica{
         }
 
         urna.apurarResultados();
-    }
 
+        scanner.close();
+    }
+    
+}
