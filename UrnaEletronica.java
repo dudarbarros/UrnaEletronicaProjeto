@@ -5,17 +5,24 @@ import java.util.Scanner;
 public class UrnaEletronica{
     private int votosNulos;
     private List<Candidatos> lista;
+    private int totalVotosValidos;
+    private int maiorVotos;
+    private List<Candidatos> vencedores;
+    private int numeroConvertido;
     
+    public UrnaEletronica(){
+        listaCandidatos();
+    }
 
     public void listaCandidatos(){
  
         lista = new ArrayList<>();
 
-        Candidatos AdaLovelace = new Candidatos("Ada Lovelace" , 01);
-        Candidatos AlanTuring = new Candidatos("Alan Turing", 02);
-        Candidatos MarieCurie = new Candidatos ("Marie Curie", 03);
-        Candidatos AlbertEinstein = new Candidatos ("Albert Einstein", 04);
-        Candidatos LudwidVanBeethoven = new Candidatos ("Ludwid Van Beethoven", 05);
+        Candidatos AdaLovelace = new Candidatos("Ada Lovelace" , "01");
+        Candidatos AlanTuring = new Candidatos("Alan Turing", "02");
+        Candidatos MarieCurie = new Candidatos ("Marie Curie", "03");
+        Candidatos AlbertEinstein = new Candidatos ("Albert Einstein", "04");
+        Candidatos LudwidVanBeethoven = new Candidatos ("Ludwid Van Beethoven", "05");
 
         lista.add(AdaLovelace);
         lista.add(AlanTuring);
@@ -25,10 +32,10 @@ public class UrnaEletronica{
 
     }
 
-    public void receberVoto(int numero){
+    public void receberVoto(int numeroConvertido){
         boolean votoValido = false;
         for(Candidatos candidato : lista) {
-            if (candidato.getNumero() == numero){
+            if (Integer.parseInt(candidato.getNumero()) == numeroConvertido){
                 candidato.incrementarVotos();
                 votoValido = true;
                 break;
@@ -62,7 +69,7 @@ public class UrnaEletronica{
     }
     
     public void exibirResultados(){
-        f (totalVotosValidos == 0) {
+        if(totalVotosValidos == 0) {
             System.out.println("Nenhum voto foi registrado.");
             return;
         }
@@ -73,17 +80,17 @@ public class UrnaEletronica{
                 ? (candidato.getVotos() * 100.0 / totalVotosValidos) 
                 : 0.0; 
             System.out.printf("%s: %d votos (%.2f%%)%n", 
-                candidato.getnomeCandidato(), candidato.getVotos(), percentual);
+                candidato.getNome(), candidato.getVotos(), percentual);
     }
     
     System.out.println("Votos Nulos: " + votosNulos);
 
     if (vencedores.size() == 1) {
-        System.out.println("Vencedor: " + vencedores.get(0).getnomeCandidato());
+        System.out.println("Vencedor: " + vencedores.get(0).getNome());
     } else if (vencedores.size() > 1) {
         System.out.print("Houve empate entre: ");
         for (Candidatos vencedor : vencedores) {
-            System.out.print(vencedor.getnomeCandidato() + " ");
+            System.out.print(vencedor.getNome() + " ");
         }
         System.out.println();
     }
@@ -104,15 +111,18 @@ public class UrnaEletronica{
         while (votosRecebidos < 10) {
             System.out.print("Digite o número do seu candidato: ");
             try {
-                int numero = Integer.parseInt(scanner.nextLine());
-                urna.receberVoto(numero);
+                String numero = scanner.nextLine();
+                int numeroConvertido = Integer.parseInt(numero);
+                urna.receberVoto(numeroConvertido);
                 votosRecebidos++;
             } catch (NumberFormatException e) {
                 System.out.println("Entrada inválida. Digite um número válido.");
             }
         }
 
+
         urna.apurarResultados();
+        urna.exibirResultados();
 
         scanner.close();
     }

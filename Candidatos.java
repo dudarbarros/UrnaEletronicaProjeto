@@ -1,10 +1,10 @@
 
-    public class Candidatos{
+public class Candidatos{
         private String nomeDosCandidatos;
-        private int numeroDosCandidatos;
+        private String numeroDosCandidatos;
         private int votosDosCandidatos;
 
-        public Candidatos(String nome , int numero){
+        public Candidatos(String nomeDosCandidatos , String numeroDosCandidatos){
             this.nomeDosCandidatos = nomeDosCandidatos;
             this.numeroDosCandidatos = numeroDosCandidatos;
             this.votosDosCandidatos = 0;
@@ -13,7 +13,7 @@
             return nomeDosCandidatos;
         }
 
-        public int getNumero(){
+        public String getNumero(){
             return numeroDosCandidatos;
         }
         public int getVotos(){
